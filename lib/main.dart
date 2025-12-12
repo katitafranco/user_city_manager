@@ -7,6 +7,7 @@ import 'app/data/repositories/auth_repository.dart';
 import 'modules/auth/controllers/auth_controller.dart';
 import 'modules/auth/pages/login_screen.dart';
 import 'modules/auth/pages/home_screen.dart';
+import 'app/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,14 +35,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Gestión Usuarios',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-        appBarTheme: const AppBarTheme(
-          elevation: 0,
-          centerTitle: true,
-        ),
-      ),
+      theme: AppTheme.lightTheme,
       // NO usar initialBinding porque ya registramos arriba
       getPages: [
         GetPage(name: '/login', page: () => LoginScreen()),
