@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'app/utils/logger.dart';
 import 'app/utils/storage_helper.dart';
 import 'app/data/dio_client.dart';
 import 'app/data/repositories/auth_repository.dart';
@@ -12,14 +13,15 @@ void main() async {
   
   // Inicializar storage
   await StorageHelper.init();
-  print('✅ StorageHelper inicializado');
+   AppLogger.info('✅ StorageHelper inicializado');
+
   
   // Registrar dependencias GLOBALES
   Get.put(DioClient(), permanent: true);
   Get.put(AuthRepository(), permanent: true);
   Get.put(AuthController(), permanent: true);
   
-  print('✅ Dependencias registradas');
+  AppLogger.info('✅ Dependencias registradas');
   
   runApp(const MyApp());
 }
