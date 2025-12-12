@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../app/utils/logger.dart';
 import '../../../app/widgets/app_text_field.dart';
+import '../../../app/widgets/primary_button.dart';
 import '../controllers/auth_controller.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -141,38 +142,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   final isLoading = _authController.isLoading.value;
                   final isValid = _isFormValid();
 
-                  return ElevatedButton(
-                    onPressed: isLoading || !isValid ? null : _performLogin,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[700],
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    child: isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white,
-                              ),
-                            ),
-                          )
-                        : const Text(
-                            'Iniciar Sesión',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                  );
+                  //Boton Iniciar Sesion
+                  return PrimaryButton(
+                    text: 'Iniciar Sesión',
+                    loading: isLoading,
+                    enabled: isValid,
+                    onPressed: _performLogin,
+                  );                  
                 }),
 
                 // Debug Button (solo desarrollo)
                 const SizedBox(height: 16.0),
+                
                 ElevatedButton(
                   onPressed: () {
                     _emailController.text = 'jc@gmail.com';
