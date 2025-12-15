@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../app/utils/logger.dart';
 import '../../../app/widgets/app_card.dart';
 import '../../../app/widgets/app_text_field.dart';
@@ -22,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     // Opcional: Autocompletar para pruebas
-    // _emailController.text = 'jc@gmail.com';
+    // _state.emailController.text = 'jc@gmail.com';
     // _passwordController.text = '111111';
   }
 
@@ -38,33 +39,25 @@ class _LoginScreenState extends State<LoginScreen> {
     AppLogger.info(' Email: ${_emailController.text}');
     AppLogger.info('  Password: ${_passwordController.text}');
 
-    _authController.login(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
+    _authController.login(email: _emailController.text.trim(), password: _passwordController.text.trim());
   }
 
   bool _isFormValid() {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    final isValid =
-        email.isNotEmpty &&
-        password.isNotEmpty &&
-        email.contains('@') &&
-        email.contains('.') &&
-        password.length >= 6;
+    final isValid = email.isNotEmpty && password.isNotEmpty && email.contains('@') && email.contains('.') && password.length >= 6;
 
-    AppLogger.info(
-      '📋 Validación: $isValid (email: $email, password: ${'*' * password.length})',
-    );
+    AppLogger.info('📋 Validación: $isValid (email: $email, password: ${'*' * password.length})');
     return isValid;
   }
 
-  /* @override
+  @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -73,131 +66,93 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Logo/Title
-                Icon(
-                  Icons.person_pin_circle_outlined,
-                  size: 80,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(height: 16.0),
+                // LOGO
+                Icon(Icons.person_pin_circle_outlined, size: 80, color: theme.colorScheme.primary),
+                const SizedBox(height: 16),
+
                 Text(
                   'Gestión de Usuarios y Ciudades',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
+                  style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 8.0),
+                const SizedBox(height: 8),
+
                 Text(
                   'Inicia sesión para continuar',
-                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                  style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 48.0),
 
-                // Login Form
-                Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Input del Email
-                        AppTextField(
-                          label: 'Correo Electrónico',
-                          hintText: 'ejemplo@correo.com',
-                          controller: _emailController,
-                          icon: Icons.email_outlined,
-                          onChanged: () {
-                            setState(() {});
-                            _authController.errorMessage.value = '';
-                          },
-                        ),
-                        const SizedBox(height: 20.0),
-                        //Input de la Contraseña
-                        AppTextField(
-                          label: 'Contraseña',
-                          hintText: 'Ingresa tu contraseña',
-                          controller: _passwordController,
-                          icon: Icons.lock_outline,
-                          isPassword: true,
-                          onChanged: () {
-                            setState(() {});
-                            _authController.errorMessage.value = '';
-                          },
-                        ),
-                      ],
-                    ),
+                const SizedBox(height: 48),
+
+                // 🔵 AHORA USAS AppCard
+                AppCard(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppTextField(
+                        label: 'Correo Electrónico',
+                        hintText: 'ejemplo@correo.com',
+                        controller: _emailController,
+                        icon: Icons.email_outlined,
+                        onChanged: () {
+                          setState(() {});
+                          _authController.state.errorMessage.value = '';
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      AppTextField(
+                        label: 'Contraseña',
+                        hintText: 'Ingresa tu contraseña',
+                        controller: _passwordController,
+                        icon: Icons.lock_outline,
+                        isPassword: true,
+                        onChanged: () {
+                          setState(() {});
+                          _authController.state.errorMessage.value = '';
+                        },
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 24.0),
 
-                // Login Button
-                /*  Obx(() {
-                  final isLoading = _authController.isLoading.value;
-                  final isValid = _isFormValid();
+                const SizedBox(height: 24),
 
-                  //Boton Iniciar Sesion
-                  return PrimaryButton(
-                    text: 'Iniciar Sesión',
-                    loading: isLoading,
-                    enabled: isValid,
-                    onPressed: _performLogin,
-                  );                  
-                }), */
-                Obx(
-                  () => PrimaryButton(
-                    text: 'Iniciar Sesión',
-                    onPressed: _isFormValid() ? _performLogin : null,
-                    isLoading: _authController.isLoading.value,
-                  ),
-                ),
-                // Debug Button (solo desarrollo)
-                const SizedBox(height: 16.0),
+                // 🔵 PRIMARY BUTTON
+                Obx(() => PrimaryButton(text: 'Iniciar Sesión', onPressed: _isFormValid() ? _performLogin : null, isLoading: _authController.state.isLoading.value)),
 
+                const SizedBox(height: 16),
+
+                // AUTORELLENAR – Solo dev
                 ElevatedButton(
                   onPressed: () {
                     _emailController.text = 'jc@gmail.com';
                     _passwordController.text = '111111';
                     setState(() {});
-                    AppLogger.info('✅ Credenciales de prueba establecidas');
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  ),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
                   child: const Text('AUTORELLENAR (Prueba)'),
                 ),
 
-                // Error Message
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 16),
+
+                // ERROR MESSAGE
                 Obx(
-                  () => _authController.errorMessage.value.isNotEmpty
+                  () => _authController.state.errorMessage.value.isNotEmpty
                       ? Container(
-                          padding: const EdgeInsets.all(12.0),
+                          padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: Colors.red[50],
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(8),
                             border: Border.all(color: Colors.red[200]!),
                           ),
                           child: Row(
                             children: [
                               Icon(Icons.error_outline, color: Colors.red[600]),
-                              const SizedBox(width: 8.0),
+                              const SizedBox(width: 8),
                               Expanded(
-                                child: Text(
-                                  _authController.errorMessage.value,
-                                  style: TextStyle(
-                                    color: Colors.red[600],
-                                    fontSize: 14,
-                                  ),
-                                ),
+                                child: Text(_authController.state.errorMessage.value, style: TextStyle(color: Colors.red[600], fontSize: 14)),
                               ),
                             ],
                           ),
@@ -211,147 +166,127 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
- */
+}
 
+class LoginScreenGetX extends GetView<AuthController> {
+  const LoginScreenGetX({super.key});
 
-@override
-Widget build(BuildContext context) {
-  final theme = Theme.of(context);
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
 
-  return Scaffold(
-    backgroundColor: theme.colorScheme.surface,
-    body: SafeArea(
-      child: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // LOGO
-              Icon(
-                Icons.person_pin_circle_outlined,
-                size: 80,
-                color: theme.colorScheme.primary,
-              ),
-              const SizedBox(height: 16),
+    return Scaffold(
+      backgroundColor: theme.colorScheme.surface,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // LOGO
+                Icon(Icons.person_pin_circle_outlined, size: 80, color: theme.colorScheme.primary),
+                const SizedBox(height: 16),
 
-              Text(
-                'Gestión de Usuarios y Ciudades',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
+                Text(
+                  'Gestión de Usuarios y Ciudades',
+                  style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
+                const SizedBox(height: 8),
 
-              Text(
-                'Inicia sesión para continuar',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                Text(
+                  'Inicia sesión para continuar',
+                  style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
 
-              const SizedBox(height: 48),
+                const SizedBox(height: 48),
 
-              // 🔵 AHORA USAS AppCard
-              AppCard(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppTextField(
-                      label: 'Correo Electrónico',
-                      hintText: 'ejemplo@correo.com',
-                      controller: _emailController,
-                      icon: Icons.email_outlined,
-                      onChanged: () {
-                        setState(() {});
-                        _authController.errorMessage.value = '';
-                      },
-                    ),
-                    const SizedBox(height: 20),
-
-                    AppTextField(
-                      label: 'Contraseña',
-                      hintText: 'Ingresa tu contraseña',
-                      controller: _passwordController,
-                      icon: Icons.lock_outline,
-                      isPassword: true,
-                      onChanged: () {
-                        setState(() {});
-                        _authController.errorMessage.value = '';
-                      },
-                    ),
-                  ],
+                // 🔵 AHORA USAS AppCard
+                AppCard(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppTextField(
+                        label: 'Correo Electrónico',
+                        hintText: 'ejemplo@correo.com',
+                        controller: controller.state.emailController.value,
+                        icon: Icons.email_outlined,
+                        onChanged: () {
+                          controller.state.errorMessage.value = '';
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      AppTextField(
+                        label: 'Contraseña',
+                        hintText: 'Ingresa tu contraseña',
+                        controller: controller.state.passwordController.value,
+                        icon: Icons.lock_outline,
+                        isPassword: true,
+                        onChanged: () {
+                          controller.state.errorMessage.value = '';
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-              // 🔵 PRIMARY BUTTON
-              Obx(
-                () => PrimaryButton(
-                  text: 'Iniciar Sesión',
-                  onPressed: _isFormValid() ? _performLogin : null,
-                  isLoading: _authController.isLoading.value,
+                // 🔵 PRIMARY BUTTON
+                Obx(
+                  () => PrimaryButton(
+                    text: 'Iniciar Sesión',
+                    onPressed: controller.state.isCredentialValid.value ? controller.performLogin : null,
+                    isLoading: controller.state.isLoading.value,
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-              // AUTORELLENAR – Solo dev
-              ElevatedButton(
-                onPressed: () {
-                  _emailController.text = 'jc@gmail.com';
-                  _passwordController.text = '111111';
-                  setState(() {});
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
+                // AUTORELLENAR – Solo dev
+                ElevatedButton(
+                  onPressed: () {
+                    controller.state.emailController.value.text = 'jc@gmail.com';
+                    controller.state.passwordController.value.text = '111111';
+                    controller.isFormValid();
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                  child: const Text('AUTORELLENAR (Prueba)'),
                 ),
-                child: const Text('AUTORELLENAR (Prueba)'),
-              ),
 
-              const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-              // ERROR MESSAGE
-              Obx(
-                () => _authController.errorMessage.value.isNotEmpty
-                    ? Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.red[50],
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.red[200]!),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.error_outline,
-                                color: Colors.red[600]),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                _authController.errorMessage.value,
-                                style: TextStyle(
-                                  color: Colors.red[600],
-                                  fontSize: 14,
-                                ),
+                // ERROR MESSAGE
+                Obx(
+                  () => controller.state.errorMessage.value.isNotEmpty
+                      ? Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.red[50],
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.red[200]!),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.error_outline, color: Colors.red[600]),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(controller.state.errorMessage.value, style: TextStyle(color: Colors.red[600], fontSize: 14)),
                               ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-              ),
-            ],
+                            ],
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 }
