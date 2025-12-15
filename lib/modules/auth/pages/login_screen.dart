@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../app/utils/logger.dart';
+import '../../../app/widgets/app_card.dart';
 import '../../../app/widgets/app_text_field.dart';
 import '../../../app/widgets/primary_button.dart';
 import '../controllers/auth_controller.dart';
@@ -60,10 +61,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return isValid;
   }
 
-  @override
+  /* @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -76,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Icon(
                   Icons.person_pin_circle_outlined,
                   size: 80,
-                  color: Colors.blue[700],
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(height: 16.0),
                 Text(
@@ -84,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey[800],
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -138,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 24.0),
 
                 // Login Button
-                Obx(() {
+                /*  Obx(() {
                   final isLoading = _authController.isLoading.value;
                   final isValid = _isFormValid();
 
@@ -149,11 +150,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     enabled: isValid,
                     onPressed: _performLogin,
                   );                  
-                }),
-
+                }), */
+                Obx(
+                  () => PrimaryButton(
+                    text: 'Iniciar Sesión',
+                    onPressed: _isFormValid() ? _performLogin : null,
+                    isLoading: _authController.isLoading.value,
+                  ),
+                ),
                 // Debug Button (solo desarrollo)
                 const SizedBox(height: 16.0),
-                
+
                 ElevatedButton(
                   onPressed: () {
                     _emailController.text = 'jc@gmail.com';
@@ -204,4 +211,147 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+ */
+
+
+@override
+Widget build(BuildContext context) {
+  final theme = Theme.of(context);
+
+  return Scaffold(
+    backgroundColor: theme.colorScheme.surface,
+    body: SafeArea(
+      child: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // LOGO
+              Icon(
+                Icons.person_pin_circle_outlined,
+                size: 80,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(height: 16),
+
+              Text(
+                'Gestión de Usuarios y Ciudades',
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+
+              Text(
+                'Inicia sesión para continuar',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              const SizedBox(height: 48),
+
+              // 🔵 AHORA USAS AppCard
+              AppCard(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppTextField(
+                      label: 'Correo Electrónico',
+                      hintText: 'ejemplo@correo.com',
+                      controller: _emailController,
+                      icon: Icons.email_outlined,
+                      onChanged: () {
+                        setState(() {});
+                        _authController.errorMessage.value = '';
+                      },
+                    ),
+                    const SizedBox(height: 20),
+
+                    AppTextField(
+                      label: 'Contraseña',
+                      hintText: 'Ingresa tu contraseña',
+                      controller: _passwordController,
+                      icon: Icons.lock_outline,
+                      isPassword: true,
+                      onChanged: () {
+                        setState(() {});
+                        _authController.errorMessage.value = '';
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              // 🔵 PRIMARY BUTTON
+              Obx(
+                () => PrimaryButton(
+                  text: 'Iniciar Sesión',
+                  onPressed: _isFormValid() ? _performLogin : null,
+                  isLoading: _authController.isLoading.value,
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // AUTORELLENAR – Solo dev
+              ElevatedButton(
+                onPressed: () {
+                  _emailController.text = 'jc@gmail.com';
+                  _passwordController.text = '111111';
+                  setState(() {});
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                ),
+                child: const Text('AUTORELLENAR (Prueba)'),
+              ),
+
+              const SizedBox(height: 16),
+
+              // ERROR MESSAGE
+              Obx(
+                () => _authController.errorMessage.value.isNotEmpty
+                    ? Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.red[50],
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.red[200]!),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.error_outline,
+                                color: Colors.red[600]),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                _authController.errorMessage.value,
+                                style: TextStyle(
+                                  color: Colors.red[600],
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
 }

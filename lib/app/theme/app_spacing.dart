@@ -26,6 +26,8 @@ class AppSpacing {
   static const double listItemSpacing = 12.0;
   static const double listItemHeight = 56.0;
   
+
+  
   // Padding comunes
   static const EdgeInsets screenPadding = EdgeInsets.all(md);
   static const EdgeInsets cardPadding = EdgeInsets.all(md);
@@ -43,6 +45,43 @@ class AppSpacing {
     vertical: sm,
   );
   
+// ============ ALINEACIÓN Y DISTRIBUCIÓN ============
+  
+  // MainAxisAlignment values (para Column/Row)
+  static const MainAxisAlignment centerMain = MainAxisAlignment.center;
+  static const MainAxisAlignment startMain = MainAxisAlignment.start;
+  static const MainAxisAlignment endMain = MainAxisAlignment.end;
+  static const MainAxisAlignment spaceBetweenMain = MainAxisAlignment.spaceBetween;
+  static const MainAxisAlignment spaceAroundMain = MainAxisAlignment.spaceAround;
+  static const MainAxisAlignment spaceEvenlyMain = MainAxisAlignment.spaceEvenly;
+  
+  // CrossAxisAlignment values (para Column/Row)
+  static const CrossAxisAlignment stretchCross = CrossAxisAlignment.stretch;
+  static const CrossAxisAlignment startCross = CrossAxisAlignment.start;
+  static const CrossAxisAlignment centerCross = CrossAxisAlignment.center;
+  static const CrossAxisAlignment endCross = CrossAxisAlignment.end;
+  static const CrossAxisAlignment baselineCross = CrossAxisAlignment.baseline;
+  
+  // MainAxisSize values
+  static const MainAxisSize minMainAxis = MainAxisSize.min;
+  static const MainAxisSize maxMainAxis = MainAxisSize.max;
+  
+  // TextAlign values
+  static const TextAlign textCenter = TextAlign.center;
+  static const TextAlign textLeft = TextAlign.left;
+  static const TextAlign textRight = TextAlign.right;
+  static const TextAlign textJustify = TextAlign.justify;
+  static const TextAlign textStart = TextAlign.start;
+  static const TextAlign textEnd = TextAlign.end;
+  
+  // VerticalDirection values
+  static const VerticalDirection verticalDown = VerticalDirection.down;
+  static const VerticalDirection verticalUp = VerticalDirection.up;
+  
+  // TextDirection values
+  static const TextDirection textLTR = TextDirection.ltr;
+  static const TextDirection textRTL = TextDirection.rtl;
+
   // AppBar
   static const EdgeInsets appBarPadding = EdgeInsets.symmetric(horizontal: md);
   

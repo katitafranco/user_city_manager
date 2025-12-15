@@ -138,6 +138,7 @@ class AppTheme {
   static double get gridSpacing => AppSpacing.gridSpacing;
   static double get gridChildAspectRatio => AppSpacing.gridChildAspectRatio;
   
+  
   // Spacing
   static EdgeInsets get screenPadding => AppSpacing.screenPadding;
   static EdgeInsets get cardPadding => AppSpacing.cardPadding;
@@ -174,6 +175,31 @@ class AppTheme {
   // Text colors
   static Color get textPrimaryColor => AppColors.textPrimary;
   static Color get textSecondaryColor => AppColors.textSecondary;
+
+  // ============ GETTERS PARA ALINEACIÓN ============
+  
+  // MainAxisAlignment
+  static MainAxisAlignment get centerMain => MainAxisAlignment.center;
+  static MainAxisAlignment get startMain => MainAxisAlignment.start;
+  static MainAxisAlignment get endMain => MainAxisAlignment.end;
+  static MainAxisAlignment get spaceBetweenMain => MainAxisAlignment.spaceBetween;
+  static MainAxisAlignment get spaceAroundMain => MainAxisAlignment.spaceAround;
+  
+  // CrossAxisAlignment  
+  static CrossAxisAlignment get stretchCross => CrossAxisAlignment.stretch;
+  static CrossAxisAlignment get startCross => CrossAxisAlignment.start;
+  static CrossAxisAlignment get centerCross => CrossAxisAlignment.center;
+  static CrossAxisAlignment get endCross => CrossAxisAlignment.end;
+  
+  // MainAxisSize
+  static MainAxisSize get minMainAxis => MainAxisSize.min;
+  static MainAxisSize get maxMainAxis => MainAxisSize.max;
+  
+  // TextAlign
+  static TextAlign get textCenter => TextAlign.center;
+  static TextAlign get textLeft => TextAlign.left;
+  static TextAlign get textRight => TextAlign.right;
+  static TextAlign get textJustify => TextAlign.justify;
   
   // Helper para obtener theme actual
   static ThemeData get currentTheme => lightTheme;

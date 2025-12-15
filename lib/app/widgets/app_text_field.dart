@@ -25,26 +25,27 @@ class AppTextField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.grey[700],
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
         TextField(
           controller: controller,
           obscureText: isPassword,
-          onChanged: (_) => onChanged?.call(),
+          onChanged: (_) {
+            if (onChanged != null) onChanged!();
+          },
           decoration: InputDecoration(
-            hintText: hintText,
+            labelText: hintText,
             prefixIcon: Icon(icon),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.0),
             ),
           ),
-          textInputAction:
-              isPassword ? TextInputAction.done : TextInputAction.next,
+          textInputAction: isPassword
+              ? TextInputAction.done
+              : TextInputAction.next,
         ),
       ],
     );
