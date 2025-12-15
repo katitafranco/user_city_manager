@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/city_model.dart';
-import '../../app/theme/app_spacing.dart';
-import '../../app/theme/app_theme.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../app/theme/app_theme.dart';
 
 class CityDetailScreen extends StatelessWidget {
   /// Modelo de ciudad recibido desde la pantalla anterior

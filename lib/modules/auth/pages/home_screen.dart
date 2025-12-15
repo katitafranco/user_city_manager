@@ -5,7 +5,7 @@ import '../../../app/theme/app_theme.dart';
 import '../../../app/widgets/action_button.dart';
 import '../../../app/widgets/user_info_card.dart';
 import '../controllers/auth_controller.dart';
-import '../../../cities/pages/city_screen.dart';
+import '../../cities/pages/city_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final AuthController _authController = Get.find<AuthController>();

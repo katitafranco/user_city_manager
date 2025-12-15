@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import '../../app/data/dio_client.dart';
-import '../../app/utils/logger.dart';
+import '../../../app/data/dio_client.dart';
+import '../../../app/utils/logger.dart';
 import '../models/city_model.dart';
 
 class CityController extends GetxController {
