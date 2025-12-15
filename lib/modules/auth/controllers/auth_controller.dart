@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../app/data/repositories/auth_repository.dart';
 import '../../../app/utils/logger.dart';
 import '../../../app/utils/storage_helper.dart';
+import '../../../routes/app_pages.dart';
 import 'auth_state.dart';
 
 class AuthController extends GetxController {
@@ -40,7 +41,8 @@ class AuthController extends GetxController {
     if (state.isLoggedIn.value) {
       final userData = StorageHelper.getUserData();
       if (userData != null) {
-        state.userName.value = '${userData['userFullName']} ${userData['userLastName']}'.trim();
+        state.userName.value =
+            '${userData['userFullName']} ${userData['userLastName']}'.trim();
         state.userEmail.value = userData['userEmail'] ?? '';
 
         AppLogger.debug('Datos de usuario cargados: ${state.userName.value}');
@@ -99,9 +101,15 @@ class AuthController extends GetxController {
     final password = state.passwordController.value.text.trim();
 
     // Debug
-    AppLogger.debug('Validando formulario: email="$email", password="${'*' * password.length}"');
+    AppLogger.debug(
+      'Validando formulario: email="$email", password="${'*' * password.length}"',
+    );
 
-    state.isCredentialValid.value = email.isNotEmpty && password.isNotEmpty && validateEmail(email) && validatePassword(password);
+    state.isCredentialValid.value =
+        email.isNotEmpty &&
+        password.isNotEmpty &&
+        validateEmail(email) &&
+        validatePassword(password);
 
     return state.isCredentialValid.value;
   }
@@ -114,7 +122,8 @@ class AuthController extends GetxController {
 
       // Usar parámetros o valores de controllers
       final loginEmail = email ?? state.emailController.value.text.trim();
-      final loginPassword = password ?? state.passwordController.value.text.trim();
+      final loginPassword =
+          password ?? state.passwordController.value.text.trim();
 
       AppLogger.info('Iniciando login para: $loginEmail');
 
@@ -126,13 +135,15 @@ class AuthController extends GetxController {
       }
 
       if (!validateEmail(loginEmail)) {
-        state.errorMessage.value = 'Ingresa un email válido (ejemplo@correo.com)';
+        state.errorMessage.value =
+            'Ingresa un email válido (ejemplo@correo.com)';
         AppLogger.warning('Validación fallida: email inválido');
         return;
       }
 
       if (!validatePassword(loginPassword)) {
-        state.errorMessage.value = 'La contraseña debe tener al menos 6 caracteres';
+        state.errorMessage.value =
+            'La contraseña debe tener al menos 6 caracteres';
         AppLogger.warning('Validación fallida: contraseña muy corta');
         return;
       }
@@ -142,11 +153,16 @@ class AuthController extends GetxController {
       AppLogger.info('Procesando login...');
 
       // Llamar API
-      final authResponse = await _authRepository.login(userEmail: loginEmail, userPassword: loginPassword);
+      final authResponse = await _authRepository.login(
+        userEmail: loginEmail,
+        userPassword: loginPassword,
+      );
 
       // Actualizar estado
       state.isLoggedIn.value = true;
-      state.userName.value = '${authResponse.user['userFullName']} ${authResponse.user['userLastName']}'.trim();
+      state.userName.value =
+          '${authResponse.user['userFullName']} ${authResponse.user['userLastName']}'
+              .trim();
       state.userEmail.value = authResponse.user['userEmail'] ?? loginEmail;
 
       // Limpiar formulario
@@ -156,17 +172,30 @@ class AuthController extends GetxController {
       AppLogger.info('✅ Login exitoso para: $loginEmail');
 
       // Mostrar éxito
-      Get.snackbar('¡Bienvenido!', 'Sesión iniciada correctamente', backgroundColor: Colors.green, colorText: Colors.white, duration: const Duration(seconds: 2));
+      Get.snackbar(
+        '¡Bienvenido!',
+        'Sesión iniciada correctamente',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
 
       // Navegar a home
-      Get.offAllNamed('/home');
+      /*   Get.offAllNamed('/home'); */
+      Get.offAllNamed(AppRoutes.HomePage);
     } catch (e) {
       state.errorMessage.value = e.toString().replaceAll('Exception: ', '');
 
       // Log de error
       AppLogger.error('❌ Error en login', error: e, tag: 'AUTH');
 
-      Get.snackbar('Error', state.errorMessage.value, backgroundColor: Colors.red, colorText: Colors.white, duration: const Duration(seconds: 3));
+      Get.snackbar(
+        'Error',
+        state.errorMessage.value,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
     } finally {
       state.isLoading.value = false;
     }
@@ -190,7 +219,13 @@ class AuthController extends GetxController {
 
       AppLogger.info('✅ Logout exitoso');
 
-      Get.snackbar('Sesión cerrada', 'Has cerrado sesión exitosamente', backgroundColor: Colors.blue, colorText: Colors.white, duration: const Duration(seconds: 2));
+      Get.snackbar(
+        'Sesión cerrada',
+        'Has cerrado sesión exitosamente',
+        backgroundColor: Colors.blue,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
 
       // Navegar a login
       Get.offAllNamed('/login');
@@ -210,12 +245,11 @@ class AuthController extends GetxController {
   }
 
   Future<void> performLogin() async {
-    state.isLoading.value = true;
     AppLogger.info('🎯 Botón presionado - Iniciando login');
-    AppLogger.info(' Email: ${state.emailController.value.text}');
-    AppLogger.info('  Password: ${state.passwordController.value.text}');
 
-    await login(email: state.emailController.value.text.trim(), password: state.passwordController.value.text.trim());
-    state.isLoading.value = false;
+    await login(
+      email: state.emailController.value.text.trim(),
+      password: state.passwordController.value.text.trim(),
+    );
   }
 }

@@ -9,6 +9,13 @@ abstract class AppRoutes {
   static const InitPage = '/InitPage';
 
   /// *** others path ***
+  ///
+
+  /// *** Home ***
+  ///
+  static const HomePage = '/HomeScreen';
+
+
   /// *** Ciudades ***
   static const CitiesPage = '/CitiesPage';
 }
