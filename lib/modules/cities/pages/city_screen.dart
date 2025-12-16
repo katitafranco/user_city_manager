@@ -4,6 +4,7 @@ import 'package:user_city_manager/routes/app_pages.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_theme.dart';
 import '../../../app/theme/app_colors.dart';
+import '../../../app/widgets/buttons/security_create_fab.dart';
 import '../controller/cities_logic.dart';
 import '../models/city_model.dart';
 
@@ -48,7 +49,8 @@ class CitiesPage extends GetView<CitiesLogic> {
           // 📋 List
           return ListView.separated(
             itemCount: controller.state.cities.length,
-            separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.sm),
+            separatorBuilder: (context, index) =>
+                const SizedBox(height: AppSpacing.sm),
             itemBuilder: (_, index) {
               final CityModel city = controller.state.cities[index];
 
@@ -115,7 +117,10 @@ class CitiesPage extends GetView<CitiesLogic> {
                   onTap: city.state == 1
                       ? () {
                           //Get.to(() => CityDetailPage(city: city));
-                          Get.toNamed(AppRoutes.CityDetailPage, arguments: city.id);
+                          Get.toNamed(
+                            AppRoutes.CityDetailPage,
+                            arguments: city.id,
+                          );
                         }
                       : null,
                 ),
@@ -124,6 +129,7 @@ class CitiesPage extends GetView<CitiesLogic> {
           );
         }),
       ),
+      floatingActionButton: SecureCreateFab(route: AppRoutes.CityCreatePage),
     );
   }
 }

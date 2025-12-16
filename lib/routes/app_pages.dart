@@ -35,7 +35,10 @@ abstract class AppPages {
       transition: Transition.fade,
       transitionDuration: const Duration(milliseconds: 1100),
     ),
-    GetPage(name: AppRoutes.CityDetailPage, page: () => CityDetailPage()),
+    GetPage(
+      name: AppRoutes.CityDetailPage,
+      page: () => CityDetailPage(),
+    ),
     //
     GetPage(
       name: AppRoutes.HomeScreen,
