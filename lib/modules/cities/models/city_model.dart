@@ -22,4 +22,20 @@ class CityModel {
       cityCountryCode: json['cityCountryCode'],
     );
   }
+
+  /// Crea una copia del modelo permitiendo modificar campos específicos
+  CityModel copyWith({
+    String? cityName,
+    String? cityCode,
+    int? state,
+    String? cityCountryCode,
+  }) {
+    return CityModel(
+      id: id,
+      cityName: cityName ?? this.cityName,
+      cityCode: cityCode ?? this.cityCode,
+      state: state ?? this.state,
+      cityCountryCode: cityCountryCode ?? this.cityCountryCode,
+    );
+  }
 }

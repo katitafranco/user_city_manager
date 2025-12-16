@@ -6,8 +6,8 @@ import 'package:user_city_manager/modules/home/binding/home_binding.dart';
 
 import '../app/core/middlewares/auth_middleware.dart';
 import '../app/pages/app_entry_page.dart';
+import '../modules/cities/pages/city_screen.dart';
 import '../modules/home/pages/home_screen.dart';
-import '../modules/cities/pages/cities_view.dart';
 import '../modules/users/binding/users_binding.dart';
 import '../modules/users/pages/users_view.dart';
 

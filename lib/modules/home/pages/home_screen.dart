@@ -4,8 +4,8 @@ import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_theme.dart';
 import '../../../app/widgets/buttons/action_button.dart';
 import '../../../app/widgets/card/user_info_card.dart';
+import '../../../routes/app_pages.dart';
 import '../controller/home_logic.dart';
-import '../../cities/pages/city_screen.dart';
 
 class HomeScreen extends GetView<HomeLogic> {
   const HomeScreen({super.key});
@@ -65,7 +65,8 @@ class HomeScreen extends GetView<HomeLogic> {
                     icon: Icons.location_city,
                     label: 'Ciudades',
                     color: AppTheme.cityManagementColor,
-                    onTap: () => Get.to(() => CityScreen()),
+                    /* onTap: () => Get.to(() => CityScreen()), */
+                    onTap: () => Get.offAllNamed(AppRoutes.CitiesPage),
                   ),
                   ActionButton(
                     icon: Icons.settings,

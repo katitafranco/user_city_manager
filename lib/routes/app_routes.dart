@@ -28,6 +28,10 @@ abstract class AppRoutes {
   static const CitiesPage = '/CitiesPage';
 
 
+  /// *** Detalles de las Ciudades ***
+  ///
+static const CityDetailPage = '/CityDetailPage';
+
   /// *** Usuarios ***
   static const UsersPage = '/UsersPage';
 
