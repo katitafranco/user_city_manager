@@ -2,34 +2,52 @@ import 'package:get/get.dart';
 import 'package:user_city_manager/modules/auth/binding/auth_binding.dart';
 import 'package:user_city_manager/modules/auth/pages/login_screen.dart';
 import 'package:user_city_manager/modules/cities/binding/cities_binding.dart';
+import 'package:user_city_manager/modules/home/binding/home_binding.dart';
 
-import '../modules/auth/pages/home_screen.dart';
+import '../app/core/middlewares/auth_middleware.dart';
+import '../app/pages/app_entry_page.dart';
+import '../modules/home/pages/home_screen.dart';
 import '../modules/cities/pages/cities_view.dart';
+import '../modules/users/binding/users_binding.dart';
+import '../modules/users/pages/users_view.dart';
 
 part 'app_routes.dart';
 
 abstract class AppPages {
   static final routes = <GetPage>[
+   
+    // 🚪 Entrada de la app
+    GetPage(name: AppRoutes.ROOT, page: () => const AppEntryPage()),
+
+    // 🔐 Auth
     GetPage(
-      name: AppRoutes.ROOT,
+      name: AppRoutes.LoginPage,
       binding: AuthBinding(),
       page: () => const LoginScreenGetX(),
-      transition: Transition.fade,
-      transitionDuration: const Duration(milliseconds: 1100),
     ),
     GetPage(
       name: AppRoutes.CitiesPage,
       bindings: [CitiesBinding()],
       page: () => const CitiesPage(),
+      middlewares: [AuthMiddleware()],
       transition: Transition.fade,
       transitionDuration: const Duration(milliseconds: 1100),
     ),
-    // 
+    //
     GetPage(
-      name: AppRoutes.HomePage,
+      name: AppRoutes.HomeScreen,
+      bindings: [HomeBinding()],
       page: () => HomeScreen(),
+      middlewares: [AuthMiddleware()],
       transition: Transition.fade,
       transitionDuration: const Duration(milliseconds: 500),
+    ),
+    // 👥 Users
+    GetPage(
+      name: AppRoutes.UsersPage,
+      bindings: [UsersBinding()],
+      middlewares: [AuthMiddleware()],
+      page: () => const UsersPage(),
     ),
   ];
 }

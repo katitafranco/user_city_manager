@@ -13,9 +13,23 @@ abstract class AppRoutes {
 
   /// *** Home ***
   ///
-  static const HomePage = '/HomeScreen';
+  static const AppEntryPage  = '/AppEntryPage ';
+  
+  /// *** Home ***
+  ///
+  static const LoginPage = '/LoginScreenGetX';
+
+  /// *** Home ***
+  ///
+  static const HomeScreen = '/HomeScreen';
 
 
   /// *** Ciudades ***
   static const CitiesPage = '/CitiesPage';
+
+
+  /// *** Usuarios ***
+  static const UsersPage = '/UsersPage';
+
+  
 }
