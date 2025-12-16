@@ -3,37 +3,25 @@
 part of './app_pages.dart';
 
 abstract class AppRoutes {
+  /* 
+   ///Como no usaremos pantalla de bienvenida la comento
   static const ROOT = '/';
-
-  /// *** Welcome path ***
-  static const InitPage = '/InitPage';
-
-  /// *** others path ***
+ */
+  /// *** Home ***
   ///
+  static const LoginPage = '/login';
 
   /// *** Home ***
   ///
-  static const AppEntryPage  = '/AppEntryPage ';
-  
-  /// *** Home ***
-  ///
-  static const LoginPage = '/LoginScreenGetX';
-
-  /// *** Home ***
-  ///
-  static const HomeScreen = '/HomeScreen';
-
+  static const HomeScreen = '/home';
 
   /// *** Ciudades ***
-  static const CitiesPage = '/CitiesPage';
-
+  static const CitiesPage = '/cities';
 
   /// *** Detalles de las Ciudades ***
   ///
-static const CityDetailPage = '/CityDetailPage';
+  static const CityDetailPage = '/cities/detail';
 
   /// *** Usuarios ***
-  static const UsersPage = '/UsersPage';
-
-  
+  static const UsersPage = '/users';
 }

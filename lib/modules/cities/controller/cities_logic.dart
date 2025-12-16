@@ -1,4 +1,3 @@
-
 import 'package:get/get.dart';
 import '../../../app/config/api_endpoints.dart';
 import '../../../app/data/dio_client.dart';
@@ -69,14 +68,6 @@ class CitiesLogic extends GetxController {
       Get.snackbar('Error', 'Todos los campos son obligatorios');
       return false;
     }
-
-    /*   // Paso de seguridad antes de guardar cambios
-    final otpValid = await _validateOtp();
-    if (!otpValid) {
-      Get.snackbar('OTP inválido', 'No se guardaron los cambios');
-      return false;
-    }
- */
 
     // 2️⃣ Confirmación OTP (widget reutilizable)
     final confirmed = await SecureActionDialog.confirm(
@@ -165,68 +156,43 @@ class CitiesLogic extends GetxController {
       return false;
     }
   }
-/* 
-  /// Simula una validación OTP para operaciones sensibles.
-  /// Retorna true si el OTP es correcto.
-  Future<bool> _validateOtp() async {
-    final TextEditingController otpCtrl = TextEditingController();
 
-    final result = await Get.dialog<bool>(
-      Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Confirmar cambios',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 12),
-              const Text('Ingrese el OTP para continuar'),
-              const SizedBox(height: 12),
-              TextField(
-                controller: otpCtrl,
-                keyboardType: TextInputType.number,
-                autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'OTP simulado: 123456',
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextButton(
-                      onPressed: () {
-                        Get.back(result: false);
-                      },
-                      child: const Text('Cancelar'),
-                    ),
-                  ),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        final isValid = otpCtrl.text.trim() == '123456';
-                        Get.back(result: isValid);
-                      },
-                      child: const Text('Confirmar'),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-      barrierDismissible: false,
+  Future<bool> reactivateCity(int cityId) async {
+    final confirmed = await SecureActionDialog.confirm(
+      title: 'Reactivar ciudad',
+      description:
+          'Esta acción volverá a activar la ciudad. ¿Deseas continuar?',
     );
 
-    // ❌ NO dispose aquí
-    return result ?? false;
+    if (!confirmed) {
+      Get.snackbar('Cancelado', 'La ciudad no fue modificada');
+      return false;
+    }
+
+    try {
+      final response = await _dioClient.dio.patch(
+        ApiEndpoints.cityById(cityId),
+        data: {'state': 1},
+      );
+
+      if (response.statusCode == 200) {
+        final index = state.cities.indexWhere((c) => c.id == cityId);
+        if (index != -1) {
+          state.cities[index] = state.cities[index].copyWith(state: 1);
+        }
+
+        Get.snackbar('Éxito', 'Ciudad reactivada correctamente');
+        return true;
+      }
+
+      Get.snackbar('Error', 'No se pudo reactivar la ciudad');
+      return false;
+    } catch (e) {
+      Get.snackbar('Error', 'Error al reactivar la ciudad');
+      return false;
+    }
   }
- */
+
   /// Se ejecuta cuando el módulo se elimina de memoria.
   @override
   void onClose() {

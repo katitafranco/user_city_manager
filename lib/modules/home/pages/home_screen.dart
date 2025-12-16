@@ -66,7 +66,7 @@ class HomeScreen extends GetView<HomeLogic> {
                     label: 'Ciudades',
                     color: AppTheme.cityManagementColor,
                     /* onTap: () => Get.to(() => CityScreen()), */
-                    onTap: () => Get.offAllNamed(AppRoutes.CitiesPage),
+                    onTap: () => Get.toNamed(AppRoutes.CitiesPage),
                   ),
                   ActionButton(
                     icon: Icons.settings,

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart' as dio_package;  // Alias para evitar conflictos
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../routes/app_pages.dart';
 import '../config/api_endpoints.dart';
 import '../config/app_constants.dart';
 
@@ -121,7 +122,9 @@ class DioClient {
       } else {
         // Token refresh failed, navigate to login
         AppLogger.warning('Token refresh failed, navigating to login');
-        Get.offAllNamed('/login');
+        
+        // En DioClient cuando el token expira debemos redirigir al login y borrar la pila
+        Get.offAllNamed(AppRoutes.LoginPage);
       }
     }
     

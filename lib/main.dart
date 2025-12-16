@@ -36,8 +36,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       // NO usar initialBinding porque ya registramos arriba
+      initialRoute: AppRoutes.LoginPage, 
       getPages: AppPages.routes,
-      initialRoute: AppRoutes.ROOT, // StorageHelper.isLoggedIn() ? '/home' : '/login',
+      
+      //esto me sirve si quiero mantenerme logueado en este caso no quieren
+      // StorageHelper.isLoggedIn() ? '/home' : '/login',
     );
   }
 }

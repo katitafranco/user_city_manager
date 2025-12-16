@@ -2,10 +2,11 @@ import 'package:get/get.dart';
 import 'package:user_city_manager/modules/auth/binding/auth_binding.dart';
 import 'package:user_city_manager/modules/auth/pages/login_screen.dart';
 import 'package:user_city_manager/modules/cities/binding/cities_binding.dart';
+import 'package:user_city_manager/modules/cities/pages/city_detail_screen.dart';
 import 'package:user_city_manager/modules/home/binding/home_binding.dart';
-
 import '../app/core/middlewares/auth_middleware.dart';
-import '../app/pages/app_entry_page.dart';
+//simport '../app/pages/app_entry_page.dart';
+import '../modules/cities/models/city_model.dart';
 import '../modules/cities/pages/city_screen.dart';
 import '../modules/home/pages/home_screen.dart';
 import '../modules/users/binding/users_binding.dart';
@@ -15,10 +16,11 @@ part 'app_routes.dart';
 
 abstract class AppPages {
   static final routes = <GetPage>[
-   
-    // 🚪 Entrada de la app
+    /*
+    ///Como no usaremos pantalla de bienvenida la comento
+    // // 🚪 Entrada de la app
     GetPage(name: AppRoutes.ROOT, page: () => const AppEntryPage()),
-
+ */
     // 🔐 Auth
     GetPage(
       name: AppRoutes.LoginPage,
@@ -32,6 +34,10 @@ abstract class AppPages {
       middlewares: [AuthMiddleware()],
       transition: Transition.fade,
       transitionDuration: const Duration(milliseconds: 1100),
+    ),
+    GetPage(
+      name: AppRoutes.CityDetailPage,
+      page: () => CityDetailPage(city: Get.arguments as CityModel),
     ),
     //
     GetPage(
