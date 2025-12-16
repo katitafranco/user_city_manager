@@ -5,6 +5,9 @@ import '../controller/cities_logic.dart';
 class CitiesBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => CitiesLogic());
+    Get.lazyPut<CitiesLogic>(
+      () => CitiesLogic(),
+      fenix: true,
+    );
   }
 }

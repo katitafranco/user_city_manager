@@ -59,13 +59,12 @@ class HomeScreen extends GetView<HomeLogic> {
                     icon: Icons.people,
                     label: 'Usuarios',
                     color: AppTheme.userManagementColor,
-                    onTap: () => controller.showComingSoon('Gestión de usuarios'),
+                    onTap: () => Get.toNamed(AppRoutes.UsersPage),
                   ),
                   ActionButton(
                     icon: Icons.location_city,
                     label: 'Ciudades',
                     color: AppTheme.cityManagementColor,
-                    /* onTap: () => Get.to(() => CityScreen()), */
                     onTap: () => Get.toNamed(AppRoutes.CitiesPage),
                   ),
                   ActionButton(

@@ -24,4 +24,9 @@ abstract class AppRoutes {
 
   /// *** Usuarios ***
   static const UsersPage = '/users';
+
+  
+/// *** Detalles de los Usuarios ***
+  static const UserDetailPage = '/users/detail';
 }
+

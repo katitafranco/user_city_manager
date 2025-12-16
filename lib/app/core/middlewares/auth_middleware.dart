@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:user_city_manager/app/utils/storage_helper.dart';
-import 'package:user_city_manager/routes/app_pages.dart';
+import '../../../routes/app_pages.dart';
+import '../../utils/storage_helper.dart';
+
+
 
 /// Middleware encargado de proteger rutas que requieren autenticación.
 /// Si el usuario no tiene una sesión válida, redirige al login.

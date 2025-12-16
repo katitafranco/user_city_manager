@@ -15,7 +15,7 @@ class ApiEndpoints {
   // =========================
   static const String users = '/users';
 
-  static String userById(String id) => '$users/$id';
+  static String userById(int id) => '$users/$id';
 
   // =========================
   // City management

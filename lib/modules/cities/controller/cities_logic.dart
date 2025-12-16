@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import '../../../app/config/api_endpoints.dart';
 import '../../../app/data/dio_client.dart';
+import '../../../app/utils/api_error_handler.dart';
 import '../../../app/utils/logger.dart';
 import '../../../app/widgets/securities/secure_action_dialog.dart';
 import '../models/city_model.dart';
@@ -88,9 +90,7 @@ class CitiesLogic extends GetxController {
       // Llamada al backend para actualizar la ciudad
       final response = await _dioClient.dio.patch(
         ApiEndpoints.cityById(cityId),
-        data: {
-          'cityName': cityName,
-        },
+        data: {'cityName': cityName},
       );
 
       if (response.statusCode == 200) {
@@ -146,6 +146,8 @@ class CitiesLogic extends GetxController {
       Get.snackbar('Error', 'No se pudo desactivar la ciudad');
       return false;
     } catch (e) {
+
+      
       Get.snackbar('Error', 'Error al desactivar ciudad');
       return false;
     }
@@ -181,8 +183,13 @@ class CitiesLogic extends GetxController {
 
       Get.snackbar('Error', 'No se pudo reactivar la ciudad');
       return false;
-    } catch (e) {
-      Get.snackbar('Error', 'Error al reactivar la ciudad');
+    } on DioException catch (e, st) {
+      final message = ApiErrorHandler.parse(e);
+      state.errorMessage.value = message;
+      Get.snackbar('Error', message);
+
+      AppLogger.error('Error actualizando usuario', error: e, stackTrace: st);
+
       return false;
     }
   }
