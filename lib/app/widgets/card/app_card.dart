@@ -42,7 +42,7 @@ class AppCard extends StatelessWidget {
  */
 
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
+import '../../theme/app_theme.dart';
 
 class AppCard extends StatelessWidget {
   final Widget child;

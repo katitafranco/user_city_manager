@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:user_city_manager/app/theme/app_theme.dart';
-import '../theme/app_spacing.dart';
+import '../../theme/app_spacing.dart';
 
 class SecondaryButton extends StatelessWidget {
   final String text;
