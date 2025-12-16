@@ -2,29 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_theme.dart';
-import '../../../app/widgets/action_button.dart';
-import '../../../app/widgets/user_info_card.dart';
-import '../controllers/auth_controller.dart';
+import '../../../app/widgets/buttons/action_button.dart';
+import '../../../app/widgets/card/user_info_card.dart';
+import '../controller/home_logic.dart';
 import '../../cities/pages/city_screen.dart';
 
-class HomeScreen extends StatelessWidget {
-  final AuthController _authController = Get.find<AuthController>();
-
-  HomeScreen({super.key});
+class HomeScreen extends GetView<HomeLogic> {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Obtener datos del usuario actualmente logueado
-    final userData = _authController.getCurrentUser();
-    final cityData = userData?['city'];
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Inicio'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: _authController.logout,
+            onPressed: controller.logout,
             tooltip: 'Cerrar Sesión',
           ),
         ],
@@ -34,11 +28,17 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Tarjeta de información del usuario
-            UserInfoCard(userData: userData, cityData: cityData),
+            // Información del usuario
+            Obx(
+              () => UserInfoCard(
+                userData: controller.state.userData.value,
+                cityData: controller.state.cityData.value,
+              ),
+            ),
+
             const SizedBox(height: AppSpacing.lg),
 
-            // Título de la sección de módulos
+            // Título de módulos
             Padding(
               padding: const EdgeInsets.only(bottom: AppSpacing.md),
               child: Text(
@@ -47,7 +47,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
-            // Grid de botones de acción
+            // Grid de acciones
             Expanded(
               child: GridView.count(
                 crossAxisCount: AppTheme.gridCrossAxisCount,
@@ -56,31 +56,24 @@ class HomeScreen extends StatelessWidget {
                 childAspectRatio: AppTheme.gridChildAspectRatio,
                 children: [
                   ActionButton(
-                    // Botón de usuarios
                     icon: Icons.people,
                     label: 'Usuarios',
                     color: AppTheme.userManagementColor,
-                    onTap: () => _showComingSoon('Gestión de usuarios'),
+                    onTap: () => controller.showComingSoon('Gestión de usuarios'),
                   ),
-
                   ActionButton(
-                    // Botón de ciudades, navega a CityScreen
                     icon: Icons.location_city,
                     label: 'Ciudades',
                     color: AppTheme.cityManagementColor,
                     onTap: () => Get.to(() => CityScreen()),
                   ),
-
                   ActionButton(
-                    // Botón de configuración
                     icon: Icons.settings,
                     label: 'Configuración',
                     color: AppTheme.settingsColor,
-                    onTap: () => _showComingSoon('Configuración'),
+                    onTap: () => controller.showComingSoon('Configuración'),
                   ),
-
                   ActionButton(
-                    // Botón de acerca de
                     icon: Icons.info,
                     label: 'Acerca de',
                     color: AppTheme.aboutColor,
@@ -95,43 +88,11 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  /// Muestra un mensaje tipo Snackbar indicando que la funcionalidad estará disponible pronto
-  void _showComingSoon(String feature) {
-    Get.snackbar(
-      'Próximamente',
-      feature,
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppTheme.primaryColor, // ✅ Usando AppTheme
-      colorText: Colors.white,
-    );
-  }
-
-  /// Muestra un diálogo con información de la aplicación
+  /// Muestra el diálogo "Acerca de"
   void _showAboutDialog() {
     Get.defaultDialog(
       title: 'Acerca de',
-      titleStyle: AppTheme.textTheme(
-        Get.context!,
-      ).titleLarge, // ✅ Estilo usando AppTheme
-      contentPadding: AppTheme.dialogPadding, // ✅ Padding usando AppTheme
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Gestión de Usuarios y Ciudades',
-            style: AppTheme.textTheme(Get.context!).bodyMedium,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text('v1.0.0', style: AppTheme.textTheme(Get.context!).bodySmall),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            'Conectado a FeathersJS API',
-            style: AppTheme.textTheme(
-              Get.context!,
-            ).bodySmall?.copyWith(fontStyle: FontStyle.italic),
-          ),
-        ],
-      ),
+      content: const Text('Gestión de Usuarios y Ciudades'),
     );
   }
 }

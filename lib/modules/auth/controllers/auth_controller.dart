@@ -182,7 +182,7 @@ class AuthController extends GetxController {
 
       // Navegar a home
       /*   Get.offAllNamed('/home'); */
-      Get.offAllNamed(AppRoutes.HomePage);
+      Get.offAllNamed(AppRoutes.HomeScreen);
     } catch (e) {
       state.errorMessage.value = e.toString().replaceAll('Exception: ', '');
 
