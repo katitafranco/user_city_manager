@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../app/widgets/app_card.dart';
-import '../../../app/widgets/app_text_field.dart';
-import '../../../app/widgets/primary_button.dart';
+import '../../../app/widgets/card/app_card.dart';
+import '../../../app/widgets/inputs/app_text_field.dart';
+import '../../../app/widgets/buttons/primary_button.dart';
 import '../controllers/auth_controller.dart';
 
 class LoginScreenGetX extends GetView<AuthController> {
