@@ -9,6 +9,8 @@ import '../modules/cities/pages/city_screen.dart';
 import '../modules/home/pages/home_screen.dart';
 import '../modules/users/binding/users_binding.dart';
 import '../modules/users/pages/users_view.dart';
+import 'package:user_city_manager/modules/cities/binding/cities_create_binding.dart';
+import 'package:user_city_manager/modules/cities/pages/city_create_page.dart';
 
 part 'app_routes.dart';
 
@@ -34,9 +36,13 @@ abstract class AppPages {
       transitionDuration: const Duration(milliseconds: 1100),
     ),
     GetPage(
-      name: AppRoutes.CityDetailPage,
-      page: () => CityDetailPage(),
+      name: AppRoutes.CityCreatePage,
+      bindings: [CityCreateBinding()],
+      page: () => const CityCreatePage(),
+      middlewares: [AuthMiddleware()],
+      transition: Transition.rightToLeft,
     ),
+    GetPage(name: AppRoutes.CityDetailPage, page: () => CityDetailPage()),
     //
     GetPage(
       name: AppRoutes.HomeScreen,

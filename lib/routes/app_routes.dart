@@ -22,6 +22,9 @@ abstract class AppRoutes {
   ///
   static const CityDetailPage = '/cities/detail';
 
+  /// *** Crear Ciudad ***
+  static const CityCreatePage = '/cities/create';
+
   /// *** Usuarios ***
   static const UsersPage = '/users';
 }
