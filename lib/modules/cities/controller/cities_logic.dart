@@ -60,11 +60,9 @@ class CitiesLogic extends GetxController {
   Future<bool> updateCity({
     required int cityId,
     required String cityName,
-    required String cityCode,
-    required String countryCode,
   }) async {
     // Validación básica
-    if (cityName.isEmpty || cityCode.isEmpty || countryCode.isEmpty) {
+    if (cityName.isEmpty) {
       Get.snackbar('Error', 'Todos los campos son obligatorios');
       return false;
     }
@@ -92,8 +90,6 @@ class CitiesLogic extends GetxController {
         ApiEndpoints.cityById(cityId),
         data: {
           'cityName': cityName,
-          'cityCode': cityCode,
-          'cityCountryCode': countryCode,
         },
       );
 
@@ -103,8 +99,6 @@ class CitiesLogic extends GetxController {
         if (index != -1) {
           state.cities[index] = state.cities[index].copyWith(
             cityName: cityName,
-            cityCode: cityCode,
-            cityCountryCode: countryCode,
           );
         }
 

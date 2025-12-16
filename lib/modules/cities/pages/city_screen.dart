@@ -48,7 +48,7 @@ class CitiesPage extends GetView<CitiesLogic> {
           // 📋 List
           return ListView.separated(
             itemCount: controller.state.cities.length,
-            separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.sm),
+            separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.sm),
             itemBuilder: (_, index) {
               final CityModel city = controller.state.cities[index];
 
@@ -91,7 +91,7 @@ class CitiesPage extends GetView<CitiesLogic> {
                           if (value == 'deactivate') {
                             controller.deactivateCity(city.id);
                           }
-                          if (value == 'activate') {
+                          if (value == 'reactivate') {
                             controller.reactivateCity(city.id);
                           }
                         },
@@ -115,7 +115,7 @@ class CitiesPage extends GetView<CitiesLogic> {
                   onTap: city.state == 1
                       ? () {
                           //Get.to(() => CityDetailPage(city: city));
-                          Get.toNamed(AppRoutes.CityDetailPage, arguments: city);
+                          Get.toNamed(AppRoutes.CityDetailPage, arguments: city.id);
                         }
                       : null,
                 ),
