@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+
 import '../../../app/utils/logger.dart';
 import '../../cities/controller/cities_logic.dart';
 import '../../cities/models/city_model.dart';
@@ -11,23 +12,35 @@ class UserDetailLogic extends GetxController {
   final UsersLogic _usersLogic = Get.find<UsersLogic>();
   final CitiesLogic _citiesLogic = Get.find<CitiesLogic>();
 
+  /// Ciudades disponibles
   List<CityModel> get cities => _citiesLogic.state.cities;
 
-  late final int userId;
+  /// null = CREATE | con valor = EDIT
+  int? userId;
 
   @override
   void onInit() {
     super.onInit();
-    userId = Get.arguments as int;
-    _loadData();
+
+    userId = Get.arguments as int?;
+
+    if (userId != null) {
+      state.isEditing.value = true;
+      _loadEditData();
+    } else {
+      state.isEditing.value = false;
+      _loadCreateData();
+    }
   }
 
-  Future<void> _loadData() async {
+  /// =========================
+  /// CARGA PARA EDICIÓN
+  /// =========================
+  Future<void> _loadEditData() async {
     try {
       state.isLoading.value = true;
 
-      // Usuario
-      final user = _usersLogic.getUserById(userId);
+      final user = _usersLogic.getUserById(userId!);
       if (user == null) {
         state.errorMessage.value = 'Usuario no encontrado';
         return;
@@ -35,15 +48,16 @@ class UserDetailLogic extends GetxController {
 
       state.user.value = user;
 
-      // Cargar ciudades si hace falta
       if (_citiesLogic.state.cities.isEmpty) {
         await _citiesLogic.fetchCities();
       }
 
-      // Inicializar valores editables
       state.nameCtrl.text = user.userFullName;
       state.lastNameCtrl.text = user.userLastName;
       state.emailCtrl.text = user.userEmail;
+      state.phoneCtrl.text = user.userPhone ?? '';
+
+      state.selectedCityId.value = user.userCity.toString();
 
       state.selectedCity.value = cities.firstWhereOrNull(
         (c) => c.id == user.userCity,
@@ -60,65 +74,95 @@ class UserDetailLogic extends GetxController {
     }
   }
 
-  /// Cambiar ciudad seleccionada
-  void onCityChanged(CityModel? city) {
-    state.selectedCity.value = city;
-  }
-
-  /// Alternar modo edición
-  void toggleEdit() {
-    state.isEditing.value = !state.isEditing.value;
-
-    // Si cancela, restaurar datos originales
-    if (!state.isEditing.value) {
-      final user = state.user.value;
-      if (user != null) {
-        state.nameCtrl.text = user.userFullName;
-        state.lastNameCtrl.text = user.userLastName;
-        state.emailCtrl.text = user.userEmail;
-        state.selectedCity.value = cities.firstWhereOrNull(
-          (c) => c.id == user.userCity,
-        );
-      }
-    }
-  }
-
-  /// Guardar cambios reales
-  Future<void> saveChanges() async {
-    final user = state.user.value;
-    final city = state.selectedCity.value;
-
-    if (user == null || city == null) {
-      Get.snackbar('Error', 'Datos incompletos');
-      return;
-    }
-
+  /// =========================
+  /// CARGA PARA CREACIÓN
+  /// =========================
+  Future<void> _loadCreateData() async {
     try {
       state.isLoading.value = true;
 
-      await _usersLogic.updateUser(
-        userId: user.id,
-        userFullName: state.nameCtrl.text.trim(),
-        userLastName: state.lastNameCtrl.text.trim(),
-        userEmail: state.emailCtrl.text.trim(),
-        userCity: city.id,
-      );
+      state.clear();
+      state.selectedCityId.value = null;
 
-      // Volver atrás indicando que hubo cambios
+      if (_citiesLogic.state.cities.isEmpty) {
+        await _citiesLogic.fetchCities();
+      }
+    } catch (e, st) {
+      AppLogger.error(
+        'Error preparando creación de usuario',
+        error: e,
+        stackTrace: st,
+      );
+      state.errorMessage.value = 'Error preparando formulario';
+    } finally {
+      state.isLoading.value = false;
+    }
+  }
+
+  /// =========================
+  /// CAMBIO DESDE DROPDOWN (STRING)
+  /// =========================
+  void onCityIdChanged(String? cityId) {
+    if (cityId == null) {
+      state.selectedCityId.value = null;
+      state.selectedCity.value = null;
+      return;
+    }
+
+    state.selectedCityId.value = cityId;
+
+    state.selectedCity.value = cities.firstWhereOrNull(
+      (c) => c.id.toString() == cityId,
+    );
+  }
+
+  /// =========================
+  /// GUARDAR (CREATE / UPDATE)
+  /// =========================
+  Future<void> saveChanges() async {
+    try {
+      state.isLoading.value = true;
+      state.errorMessage.value = '';
+
+      final city = state.selectedCity.value;
+      if (city == null) {
+        Get.snackbar('Error', 'Debe seleccionar una ciudad');
+        return;
+      }
+
+      final success = state.isEditing.value
+          ? await _usersLogic.updateUser(
+              userId: state.user.value!.id,
+              userFullName: state.nameCtrl.text.trim(),
+              userLastName: state.lastNameCtrl.text.trim(),
+              userEmail: state.emailCtrl.text.trim(),
+              userCity: city.id,
+            )
+          : await _usersLogic.createUser(
+              userFullName: state.nameCtrl.text.trim(),
+              userLastName: state.lastNameCtrl.text.trim(),
+              userEmail: state.emailCtrl.text.trim(),
+              userPhone: state.phoneCtrl.text.trim(),
+              userPassword: state.passwordCtrl.text.trim(),
+              userCity: city.id,
+            );
+
+      if (!success) return;
+
       Get.back(result: true);
-      
-      // Actualizar usuario local
-      state.user.value = user.copyWith(
-        userFullName: state.nameCtrl.text.trim(),
-        userLastName: state.lastNameCtrl.text.trim(),
-        userEmail: state.emailCtrl.text.trim(),
-        city: city,
+      Get.snackbar(
+        'Éxito',
+        state.isEditing.value
+            ? 'Usuario actualizado correctamente'
+            : 'Usuario creado correctamente',
       );
-
-      state.isEditing.value = false;
-      Get.snackbar('Éxito', 'Usuario actualizado correctamente');
-    } catch (e) {
-      Get.snackbar('Error', 'No se pudo actualizar el usuario');
+    } catch (e, st) {
+      AppLogger.error(
+        'Error guardando usuario',
+        error: e,
+        stackTrace: st,
+      );
+      Get.snackbar('Error', 'No se pudo guardar el usuario');
     } finally {
       state.isLoading.value = false;
     }
@@ -129,6 +173,8 @@ class UserDetailLogic extends GetxController {
     state.nameCtrl.dispose();
     state.lastNameCtrl.dispose();
     state.emailCtrl.dispose();
+    state.phoneCtrl.dispose();
+    state.passwordCtrl.dispose();
     super.onClose();
   }
 }

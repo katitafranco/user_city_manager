@@ -11,6 +11,8 @@ class UserModel {
   final String userLastName;
   final String userEmail;
 
+  final String? userPhone;
+
   /// ID de la ciudad (relación)
   final int userCity;
 
@@ -29,6 +31,7 @@ class UserModel {
     required this.userFullName,
     required this.userLastName,
     required this.userEmail,
+    this.userPhone,
     required this.userCity,
     required this.state,
     required this.createdAt,
@@ -44,13 +47,12 @@ class UserModel {
       userFullName: json['userFullName'],
       userLastName: json['userLastName'],
       userEmail: json['userEmail'],
+      userPhone: json['userPhone'],
       userCity: json['userCity'],
       state: json['state'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
-      city: json['city'] != null
-          ? CityModel.fromJson(json['city'])
-          : null,
+      city: json['city'] != null ? CityModel.fromJson(json['city']) : null,
     );
   }
 
@@ -62,6 +64,7 @@ class UserModel {
     String? userFullName,
     String? userLastName,
     String? userEmail,
+    String? userPhone,
     int? userCity,
     int? state,
     DateTime? createdAt,
@@ -74,6 +77,7 @@ class UserModel {
       userFullName: userFullName ?? this.userFullName,
       userLastName: userLastName ?? this.userLastName,
       userEmail: userEmail ?? this.userEmail,
+      userPhone: userPhone ?? this.userPhone,
       userCity: userCity ?? this.userCity,
       state: state ?? this.state,
       createdAt: createdAt ?? this.createdAt,

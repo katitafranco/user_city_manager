@@ -64,15 +64,6 @@ abstract class AppPages {
       binding: UsersBinding(),
     ),
 
-    // USER DETAIL (needs users + cities)
-    /* GetPage(
-      name: AppRoutes.UserDetailPage,
-      page: () => const UserDetailPage(),
-      bindings: [
-        UsersBinding(),
-        CitiesBinding(),
-      ],
-    ), */
     GetPage(
       name: AppRoutes.UserDetailPage,
       page: () => const UserDetailPage(),
@@ -84,6 +75,8 @@ abstract class AppPages {
         }),
       ],
     ),
+   
+
     // CITIES LIST
     GetPage(
       name: AppRoutes.CitiesPage,

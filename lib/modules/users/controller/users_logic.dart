@@ -54,117 +54,118 @@ class UsersLogic extends GetxController {
     }
   }
 
-  Future<bool> createUser({
-    required String userFullName,
-    required String userLastName,
-    required String userEmail,
-    required int userCity,
-  }) async {
-    if (userFullName.isEmpty || userLastName.isEmpty || userEmail.isEmpty) {
-      state.errorMessage.value = 'Todos los campos son obligatorios';
-      return false;
-    }
-    try {
-      // Loading
-      state.isLoading.value = true;
-      state.errorMessage.value = '';
 
-      // Payload minimo para crear usuario
-      final payload = {
-        'userFullName': userFullName,
-        'userLastName': userLastName,
-        'userEmail': userEmail,
-        'userCity': userCity,
-      };
-
-      // Llamada a la API
-      await _dioClient.dio.post(ApiEndpoints.users, data: payload);
-
-      // Refrescar la lista de usuarios
-      await fetchUsers();
-      return true;
-    }
-    /* catch (e, st) {
-      AppLogger.error('Error creando usuario', error: e, stackTrace: st);
-      state.errorMessage.value = 'No se pudo crear el usuario';
-      return false; */
-    on DioException catch (e, st) {
-      final message = ApiErrorHandler.parse(e);
-      state.errorMessage.value = message;
-
-      AppLogger.error('Error actualizando usuario', error: e, stackTrace: st);
-
-      return false;
-    } finally {
-      // Desactivar loading
-      state.isLoading.value = false;
-    }
+Future<bool> createUser({
+  required String userFullName,
+  required String userLastName,
+  required String userEmail,
+  required String userPhone,
+  required String userPassword,
+  required int userCity,
+}) async {
+  if (userFullName.isEmpty ||
+      userLastName.isEmpty ||
+      userEmail.isEmpty ||
+      userPhone.isEmpty ||
+      userPassword.isEmpty) {
+    state.errorMessage.value = 'Todos los campos son obligatorios';
+    return false;
   }
 
-  Future<bool> updateUser({
-    required int userId,
-    required String userFullName,
-    required String userLastName,
-    required String userEmail,
-    int? userCity,
-  }) async {
-    //validación básica
-    if (userFullName.isEmpty || userLastName.isEmpty || userEmail.isEmpty) {
-      state.errorMessage.value = 'Todos los campos son obligatorios';
-      return false;
-    }
+  try {
+    state.isLoading.value = true;
+    state.errorMessage.value = '';
 
-    final confirmed = await SecureActionDialog.confirm(
-      title: 'Crear usuario',
-      description: 'Esta acción actualizará un usuario. ¿Deseas continuar?',
+    final payload = {
+      'strategy': 'local',
+      'userPhone': userPhone,
+      'userPassword': userPassword,
+      'userFullName': userFullName,
+      'userLastName': userLastName,
+      'userEmail': userEmail,
+      'userCity': userCity,
+    };
+
+    final response = await _dioClient.dio.post(
+      ApiEndpoints.users,
+      data: payload,
     );
 
-    if (!confirmed) {
-      Get.snackbar('Cancelado', 'El usuario no fue actualizado');
-      return false;
-    }
+    AppLogger.debug('CREATE USER RESPONSE: ${response.data}');
 
-    try {
-      // Loading
-      state.isLoading.value = true;
-      state.errorMessage.value = '';
+    await fetchUsers();
+    return true;
+  } on DioException catch (e, st) {
+    AppLogger.error(
+      'Error creando usuario',
+      error: e.response?.data,
+      stackTrace: st,
+    );
 
-      // Patch al backend
-      await _dioClient.dio.patch(
-        ApiEndpoints.userById(userId),
-        data: {
-          'userFullName': userFullName,
-          'userLastName': userLastName,
-          'userEmail': userEmail,
-          if (userCity != null) 'userCity': userCity,
-          
-        },
-      );
+    state.errorMessage.value =
+        e.response?.data?['message'] ?? 'No se pudo crear el usuario';
 
-      //Actualizando lista localmente
-      final index = state.users.indexWhere((u) => u.id == userId);
-      if (index != -1) {
-        state.users[index] = state.users[index].copyWith(
-          userFullName: userFullName,
-          userLastName: userLastName,
-          userEmail: userEmail,
-          userCity: userCity ?? state.users[index].userCity,
-        );
-      }
-
-      return true;
-    } on DioException catch (e, st) {
-      final message = ApiErrorHandler.parse(e);
-      state.errorMessage.value = message;
-
-      AppLogger.error('Error actualizando usuario', error: e, stackTrace: st);
-
-      return false;
-    } finally {
-      // Desactivar loading
-      state.isLoading.value = false;
-    }
+    return false;
+  } finally {
+    state.isLoading.value = false;
   }
+}
+
+
+ Future<bool> updateUser({
+  required int userId,
+  String? userFullName,
+  String? userLastName,
+  String? userEmail,
+  String? userPhone,
+  int? userCity,
+}) async {
+  final confirmed = await SecureActionDialog.confirm(
+    title: 'Actualizar usuario',
+    description: 'Esta acción modificará los datos del usuario. ¿Deseas continuar?',
+  );
+
+  if (!confirmed) {
+    Get.snackbar('Cancelado', 'El usuario no fue actualizado');
+    return false;
+  }
+
+  try {
+    state.isLoading.value = true;
+    state.errorMessage.value = '';
+
+    /// Payload dinámico
+    final Map<String, dynamic> payload = {};
+
+    if (userFullName != null) payload['userFullName'] = userFullName;
+    if (userLastName != null) payload['userLastName'] = userLastName;
+    if (userEmail != null) payload['userEmail'] = userEmail;
+    if (userPhone != null) payload['userPhone'] = userPhone;
+    if (userCity != null) payload['userCity'] = userCity;
+
+    if (payload.isEmpty) {
+      state.errorMessage.value = 'No hay cambios para actualizar';
+      return false;
+    }
+
+    await _dioClient.dio.patch(
+      ApiEndpoints.userById(userId),
+      data: payload,
+    );
+
+    await fetchUsers();
+    return true;
+  } on DioException catch (e, st) {
+    final message = ApiErrorHandler.parse(e);
+    state.errorMessage.value = message;
+
+    AppLogger.error('Error actualizando usuario', error: e, stackTrace: st);
+    return false;
+  } finally {
+    state.isLoading.value = false;
+  }
+}
+
 
   Future<bool> toggleUserState(int userId) async {
     final user = getUserById(userId);
@@ -195,8 +196,7 @@ class UsersLogic extends GetxController {
       }
 
       return true;
-    }    
-    on DioException catch (e, st) {
+    } on DioException catch (e, st) {
       final message = ApiErrorHandler.parse(e);
       state.errorMessage.value = message;
 

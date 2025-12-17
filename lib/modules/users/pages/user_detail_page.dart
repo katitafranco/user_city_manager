@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_theme.dart';
-import '../../cities/models/city_model.dart';
+import '../../../app/widgets/inputs/country_dropdown.dart';
 import '../controller/user_detail_logic.dart';
-import '../models/user_model.dart';
 
 class UserDetailPage extends GetView<UserDetailLogic> {
   const UserDetailPage({super.key});
@@ -13,18 +13,13 @@ class UserDetailPage extends GetView<UserDetailLogic> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detalle de Usuario'),
-        actions: [
-          Obx(
-            () => TextButton(
-              onPressed: controller.toggleEdit,
-              child: Text(
-                controller.state.isEditing.value ? 'Cancelar' : 'Editar',
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
+        title: Obx(
+          () => Text(
+            controller.state.isEditing.value
+                ? 'Editar usuario'
+                : 'Crear usuario',
           ),
-        ],
+        ),
       ),
       body: Padding(
         padding: AppTheme.screenPadding,
@@ -33,29 +28,84 @@ class UserDetailPage extends GetView<UserDetailLogic> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (controller.state.errorMessage.isNotEmpty) {
-            return Center(
-              child: Text(
-                controller.state.errorMessage.value,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
-                ),
-              ),
-            );
-          }
-
-          final user = controller.state.user.value;
-          if (user == null) {
-            return const Center(child: Text('Usuario no disponible'));
-          }
-
           return SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _UserHeader(user: user),
+                /// ERROR
+                if (controller.state.errorMessage.isNotEmpty)
+                  Text(
+                    controller.state.errorMessage.value,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+
+                const SizedBox(height: AppSpacing.md),
+
+                /// NOMBRE
+                _input(controller: controller.state.nameCtrl, label: 'Nombre'),
+
+                /// APELLIDO
+                _input(
+                  controller: controller.state.lastNameCtrl,
+                  label: 'Apellido',
+                ),
+
+                /// EMAIL
+                _input(
+                  controller: controller.state.emailCtrl,
+                  label: 'Email',
+                  keyboardType: TextInputType.emailAddress,
+                ),
+
+                /// TELÉFONO
+                _input(
+                  controller: controller.state.phoneCtrl,
+                  label: 'Teléfono',
+                  keyboardType: TextInputType.phone,
+                  enabled: !controller.state.isEditing.value,
+                ),
+
+                /// CONTRASEÑA (solo CREATE)
+                if (!controller.state.isEditing.value)
+                  _input(
+                    controller: controller.state.passwordCtrl,
+                    label: 'Contraseña',
+                    obscure: true,
+                  ),
+
+                const SizedBox(height: AppSpacing.md),
+
+                /*  /// CIUDAD
+                CityDropdown(
+                  value: controller.state.selectedCity.value,
+                  items: controller.cities,
+                  onChanged: controller.onCityChanged,
+                ), */
+                CountryDropdown(
+                  value: controller.state.selectedCityId.value,
+                  items: controller.cities
+                      .map(
+                        (city) => DropdownMenuItem<String>(
+                          value: city.id.toString(),
+                          child: Text(city.cityName),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: controller.onCityIdChanged,
+                ),
                 const SizedBox(height: AppSpacing.lg),
-                _UserInfoSection(controller: controller),
+
+                /// BOTÓN
+                ElevatedButton(
+                  onPressed: controller.saveChanges,
+                  child: Text(
+                    controller.state.isEditing.value
+                        ? 'Actualizar usuario'
+                        : 'Crear usuario',
+                  ),
+                ),
               ],
             ),
           );
@@ -63,133 +113,27 @@ class UserDetailPage extends GetView<UserDetailLogic> {
       ),
     );
   }
-}
 
-class _UserHeader extends StatelessWidget {
-  final UserModel user;
-
-  const _UserHeader({required this.user});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: AppTheme.cardPadding,
-        child: Row(
-          children: [
-            const CircleAvatar(radius: 28, child: Icon(Icons.person)),
-            const SizedBox(width: AppSpacing.md),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${user.userFullName} ${user.userLastName}',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                Text(
-                  user.userEmail,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _UserInfoSection extends StatelessWidget {
-  final UserDetailLogic controller;
-
-  const _UserInfoSection({required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: AppTheme.cardPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Información del usuario',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            const SizedBox(height: AppSpacing.md),
-
-            // Nombre
-            Obx(() => TextField(
-                  controller: controller.state.nameCtrl,
-                  enabled: controller.state.isEditing.value,
-                  decoration: const InputDecoration(
-                    labelText: 'Nombre',
-                    border: OutlineInputBorder(),
-                  ),
-                )),
-            const SizedBox(height: AppSpacing.md),
-
-            // Apellido
-            Obx(() => TextField(
-                  controller: controller.state.lastNameCtrl,
-                  enabled: controller.state.isEditing.value,
-                  decoration: const InputDecoration(
-                    labelText: 'Apellido',
-                    border: OutlineInputBorder(),
-                  ),
-                )),
-            const SizedBox(height: AppSpacing.md),
-
-            // Email
-            Obx(() => TextField(
-                  controller: controller.state.emailCtrl,
-                  enabled: controller.state.isEditing.value,
-                  decoration: const InputDecoration(
-                    labelText: 'Correo electrónico',
-                    border: OutlineInputBorder(),
-                  ),
-                )),
-            const SizedBox(height: AppSpacing.md),
-
-            // Ciudad
-            Obx(() => DropdownButtonFormField<CityModel>(
-                  initialValue: controller.state.selectedCity.value,
-                  items: controller.cities
-                      .map(
-                        (city) => DropdownMenuItem<CityModel>(
-                          value: city,
-                          child: Text(city.cityName),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: controller.state.isEditing.value
-                      ? controller.onCityChanged
-                      : null,
-                  decoration: const InputDecoration(
-                    labelText: 'Ciudad',
-                    border: OutlineInputBorder(),
-                  ),
-                )),
-
-            // Botón guardar
-            Obx(() {
-              if (!controller.state.isEditing.value) {
-                return const SizedBox.shrink();
-              }
-              return Column(
-                children: [
-                  const SizedBox(height: AppSpacing.lg),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: controller.saveChanges,
-                      child: const Text('Guardar cambios'),
-                    ),
-                  ),
-                ],
-              );
-            }),
-          ],
+  /// =========================
+  /// INPUT REUTILIZABLE
+  /// =========================
+  Widget _input({
+    required TextEditingController controller,
+    required String label,
+    TextInputType keyboardType = TextInputType.text,
+    bool obscure = false,
+    bool enabled = true,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        obscureText: obscure,
+        enabled: enabled,
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
         ),
       ),
     );

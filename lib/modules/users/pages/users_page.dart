@@ -4,6 +4,7 @@ import 'package:user_city_manager/app/theme/app_theme.dart';
 import 'package:user_city_manager/modules/users/models/user_model.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
+import '../../../app/widgets/buttons/security_create_fab.dart';
 import '../../../routes/app_pages.dart';
 import '../controller/users_logic.dart';
 
@@ -134,6 +135,7 @@ class UsersPage extends GetView<UsersLogic> {
           );
         }),
       ),
+       floatingActionButton: SecureCreateFab(route: AppRoutes.UserDetailPage),
     );
   }
 }
