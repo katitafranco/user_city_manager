@@ -6,6 +6,8 @@ import 'package:user_city_manager/modules/cities/pages/city_detail_screen.dart';
 import 'package:user_city_manager/modules/home/binding/home_binding.dart';
 import 'package:user_city_manager/modules/users/pages/user_detail_page.dart';
 import '../app/core/middlewares/auth_middleware.dart';
+import '../modules/cities/binding/cities_create_binding.dart';
+import '../modules/cities/pages/city_create_page.dart';
 import '../modules/cities/pages/city_screen.dart';
 import '../modules/home/pages/home_screen.dart';
 import '../modules/users/binding/users_binding.dart';
@@ -40,6 +42,13 @@ abstract class AppPages {
       page: () => CityDetailPage(),
     ),
     //
+    GetPage(
+      name: AppRoutes.CityCreatePage,
+      bindings: [CityCreateBinding()],
+      page: () => const CityCreatePage(),
+      middlewares: [AuthMiddleware()],
+      transition: Transition.rightToLeft,
+    ),
     GetPage(
       name: AppRoutes.HomeScreen,
       bindings: [HomeBinding()],

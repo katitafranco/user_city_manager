@@ -17,7 +17,7 @@ class CountryDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
-      value: value,
+      initialValue: value,
       decoration: InputDecoration(labelText: 'País', errorText: errorText),
       items: items,
       onChanged: onChanged,
