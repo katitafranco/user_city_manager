@@ -1,20 +1,18 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../cities/models/city_model.dart';
 import '../models/user_model.dart';
 
 class UserDetailState {
-  /// Usuario cargado
-  final Rx<UserModel?> user = Rx<UserModel?>(null);
+  final isLoading = false.obs;
+  final errorMessage = ''.obs;
+  final isEditing = false.obs;
 
-  /// Lista de ciudades
-  final RxList<CityModel> cities = <CityModel>[].obs;
+  final user = Rx<UserModel?>(null);
+  final selectedCity = Rx<CityModel?>(null);
 
-  /// Ciudad seleccionada
-  final Rx<CityModel?> selectedCity = Rx<CityModel?>(null);
-
-  /// Loading general
-  final RxBool isLoading = false.obs;
-
-  /// Error
-  final RxString errorMessage = ''.obs;
+  // 🆕 Controllers de edición
+  final nameCtrl = TextEditingController();
+  final lastNameCtrl = TextEditingController();
+  final emailCtrl = TextEditingController();
 }

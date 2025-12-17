@@ -136,6 +136,8 @@ class UsersLogic extends GetxController {
           'userFullName': userFullName,
           'userLastName': userLastName,
           'userEmail': userEmail,
+          if (userCity != null) 'userCity': userCity,
+          
         },
       );
 
@@ -146,6 +148,7 @@ class UsersLogic extends GetxController {
           userFullName: userFullName,
           userLastName: userLastName,
           userEmail: userEmail,
+          userCity: userCity ?? state.users[index].userCity,
         );
       }
 

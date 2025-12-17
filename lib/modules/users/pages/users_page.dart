@@ -114,13 +114,18 @@ class UsersPage extends GetView<UsersLogic> {
                       ),
                     ],
                   ),
-                  // Navegar a detalle si está activo
+                  // Navegar a detalle si está activo y si fue actualizado 
+                  // hay que refrescar la lista                  
                   onTap: user.state == 1
-                      ? () {
-                          Get.toNamed(
+                      ? () async {
+                          final updated = await Get.toNamed(
                             AppRoutes.UserDetailPage,
                             arguments: user.id,
                           );
+
+                          if (updated == true) {
+                            controller.refreshUsers();
+                          }
                         }
                       : null,
                 ),
