@@ -1,27 +1,4 @@
-/* import 'package:flutter/material.dart';
 
-class AppTheme {
-  static ThemeData lightTheme = ThemeData(
-    useMaterial3: true,
-
-    colorSchemeSeed: Colors.blue,
-
-    appBarTheme: const AppBarTheme(elevation: 0, centerTitle: true),
-
-    cardTheme: const CardThemeData(
-      elevation: 2,
-      margin: EdgeInsets.all(8),
-      shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(12)),
-      ),
-    ),
-
-    inputDecorationTheme: const InputDecorationTheme(
-      border: OutlineInputBorder(),
-    ),
-  );
-}
- */
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'app_spacing.dart';
@@ -177,29 +154,6 @@ class AppTheme {
   static Color get textSecondaryColor => AppColors.textSecondary;
 
   // ============ GETTERS PARA ALINEACIÓN ============
-  
-  // MainAxisAlignment
-  static MainAxisAlignment get centerMain => MainAxisAlignment.center;
-  static MainAxisAlignment get startMain => MainAxisAlignment.start;
-  static MainAxisAlignment get endMain => MainAxisAlignment.end;
-  static MainAxisAlignment get spaceBetweenMain => MainAxisAlignment.spaceBetween;
-  static MainAxisAlignment get spaceAroundMain => MainAxisAlignment.spaceAround;
-  
-  // CrossAxisAlignment  
-  static CrossAxisAlignment get stretchCross => CrossAxisAlignment.stretch;
-  static CrossAxisAlignment get startCross => CrossAxisAlignment.start;
-  static CrossAxisAlignment get centerCross => CrossAxisAlignment.center;
-  static CrossAxisAlignment get endCross => CrossAxisAlignment.end;
-  
-  // MainAxisSize
-  static MainAxisSize get minMainAxis => MainAxisSize.min;
-  static MainAxisSize get maxMainAxis => MainAxisSize.max;
-  
-  // TextAlign
-  static TextAlign get textCenter => TextAlign.center;
-  static TextAlign get textLeft => TextAlign.left;
-  static TextAlign get textRight => TextAlign.right;
-  static TextAlign get textJustify => TextAlign.justify;
   
   // Helper para obtener theme actual
   static ThemeData get currentTheme => lightTheme;

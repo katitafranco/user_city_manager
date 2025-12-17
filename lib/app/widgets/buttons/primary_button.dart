@@ -80,7 +80,7 @@ class PrimaryButton extends StatelessWidget {
               ),
             )
           : Row(
-              mainAxisAlignment: AppTheme.centerMain,
+              mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (icon != null)

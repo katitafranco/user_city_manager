@@ -62,7 +62,7 @@ class SecondaryButton extends StatelessWidget {
               ),
             )
           : Row(
-              mainAxisAlignment: AppTheme.centerMain,
+              mainAxisAlignment: MainAxisAlignment.center,
              
               children: [
                 if (icon != null) ...[
